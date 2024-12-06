@@ -1,4 +1,5 @@
 import os
+os.environ['TF_ENABLE_ONEDNN_OPTS'] = '0'
 import shutil
 from PIL import Image
 import numpy as np
@@ -47,8 +48,6 @@ for clase in clases:
 print("Imágenes divididas en entrenamiento y prueba.")
 
 # Carga y preprocesamiento de datos
-
-
 def cargar_datos(ruta_base, clases, width, height):
     imagenes = []
     etiquetas = []
@@ -121,13 +120,18 @@ disp.plot(cmap=plt.cm.Blues, values_format='d')
 plt.title("Matriz de Confusión")
 plt.show()
 
-# Guardar el modelo
-model.save('modelo_frutas.keras')
 
 # Predicción de una nueva imagen
-
-
 def predecir_imagen(ruta_imagen, width, height, model):
+    # Mostrar la imagen de prueba
+    img_original = Image.open(ruta_imagen)
+    plt.figure(figsize=(4, 4))
+    plt.imshow(img_original)
+    plt.axis('off')
+    plt.title("Imagen de prueba")
+    plt.show()
+
+    # procesar imagen para el modelo
     img = Image.open(ruta_imagen).convert("RGB")
     img = img.resize((width, height))
     img_array = np.array(img) / 255.0
@@ -140,7 +144,6 @@ def predecir_imagen(ruta_imagen, width, height, model):
 
 # Prueba con una imagen nueva (ajustado para usar imágenes desde cualquier ruta)
 nueva_imagen = r'C:\Users\USUARIO\Documents\Workspace\ProyectoIA\proyectoIA\fotos IA\test\orange\orange (12).png'
-# Mostrar la imagen de prueba
 
 clase, confianza = predecir_imagen(nueva_imagen, width, height, model)
 print(f"Clase predicha: {clase}, Confianza: {confianza:.2f}%")
